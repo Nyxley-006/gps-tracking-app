@@ -1,3 +1,80 @@
+# myFolder 
+gps-tracking-app/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── server/
+│   ├── db.json
+│   └── server.js
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   └── icons/
+│   │       └── marker-icon.png
+│   ├── components/
+│   │   ├── Map/
+│   │   │   ├── MapView.jsx
+│   │   │   ├── DeviceMarker.jsx
+│   │   │   └── MapControls.jsx
+│   │   ├── Dashboard/
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── StatsCard.jsx
+│   │   │   └── ActivityChart.jsx
+│   │   ├── DeviceList/
+│   │   │   ├── DeviceList.jsx
+│   │   │   └── DeviceCard.jsx
+│   │   ├── DeviceDetails/
+│   │   │   ├── DeviceDetails.jsx
+│   │   │   └── DeviceHistory.jsx
+│   │   ├── Sidebar/
+│   │   │   └── Sidebar.jsx
+│   │   ├── Header/
+│   │   │   └── Header.jsx
+│   │   ├── Alerts/
+│   │   │   ├── AlertList.jsx
+│   │   │   └── AlertItem.jsx
+│   │   ├── Auth/
+│   │   │   ├── Login.jsx
+│   │   │   └── Register.jsx
+│   │   └── Common/
+│   │       ├── Loading.jsx
+│   │       └── SearchBar.jsx
+│   ├── pages/
+│   │   ├── HomePage.jsx
+│   │   ├── DashboardPage.jsx
+│   │   ├── DevicesPage.jsx
+│   │   ├── TrackingPage.jsx
+│   │   ├── AlertsPage.jsx
+│   │   ├── HistoryPage.jsx
+│   │   └── LoginPage.jsx
+│   ├── services/
+│   │   ├── api.js
+│   │   ├── deviceService.js
+│   │   ├── authService.js
+│   │   └── socketService.js
+│   ├── store/
+│   │   ├── store.js
+│   │   ├── deviceSlice.js
+│   │   ├── authSlice.js
+│   │   └── alertSlice.js
+│   ├── hooks/
+│   │   ├── useDevices.js
+│   │   ├── useGeolocation.js
+│   │   └── useSocket.js
+│   ├── utils/
+│   │   ├── constants.js
+│   │   ├── helpers.js
+│   │   └── formatters.js
+│   ├── styles/
+│   │   ├── global.css
+│   │   ├── Map.css
+│   │   └── Dashboard.css
+│   ├── App.jsx
+│   ├── App.css
+│   └── index.js
+├── package.json
+└── README.md
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
