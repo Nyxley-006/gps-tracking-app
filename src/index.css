@@ -1,13 +1,229 @@
-body {
+## ÉTAPE 3 : Configuration du CSS Cyberpunk
+
+---
+
+### Ouvre `src/index.css` et remplace tout le contenu par :
+
+```css
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap');
+
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  background-color: #0a0a0f;
+  color: #00ff41;
+  font-family: 'Share Tech Mono', monospace;
+  overflow-x: hidden;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ff41;
+  border-radius: 4px;
+  box-shadow: 0 0 10px #00ff41;
+}
+
+.matrix-bg {
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: matrixMove 20s linear infinite;
+}
+
+@keyframes matrixMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 50px; }
+}
+
+.scan-line::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #00ff41, transparent);
+  animation: scan 3s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100vh; }
+}
+
+.cyber-card {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(26, 26, 46, 0.9));
+  border: 1px solid #00ff41;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.2), inset 0 0 15px rgba(0, 255, 65, 0.05);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.cyber-card:hover {
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.4), inset 0 0 30px rgba(0, 255, 65, 0.1);
+}
+
+.cyber-card-red {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(46, 13, 13, 0.9));
+  border: 1px solid #ff073a;
+  box-shadow: 0 0 15px rgba(255, 7, 58, 0.2), inset 0 0 15px rgba(255, 7, 58, 0.05);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.cyber-card-cyan {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(13, 40, 46, 0.9));
+  border: 1px solid #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 15px rgba(0, 240, 255, 0.05);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.cyber-card-purple {
+  background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(30, 13, 46, 0.9));
+  border: 1px solid #b026ff;
+  box-shadow: 0 0 15px rgba(176, 38, 255, 0.2), inset 0 0 15px rgba(176, 38, 255, 0.05);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.cyber-btn {
+  position: relative;
+  background: transparent;
+  border: 2px solid #00ff41;
+  color: #00ff41;
+  padding: 10px 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.cyber-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.cyber-btn:hover::before {
+  left: 100%;
+}
+
+.cyber-btn:hover {
+  background: rgba(0, 255, 65, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+  transform: translateY(-2px);
+}
+
+.glitch {
+  position: relative;
+  animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+  0%, 90%, 100% { 
+    text-shadow: none;
+    transform: translate(0);
+  }
+  92% { 
+    text-shadow: 2px 0 #ff073a, -2px 0 #00f0ff;
+    transform: translate(-2px);
+  }
+  94% { 
+    text-shadow: -2px 0 #ff073a, 2px 0 #00f0ff;
+    transform: translate(2px);
+  }
+  96% { 
+    text-shadow: 2px 2px #ff073a, -2px -2px #00f0ff;
+    transform: translate(0);
+  }
+}
+
+.cursor-blink::after {
+  content: '█';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.glow-green {
+  text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41;
+}
+
+.glow-cyan {
+  text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff, 0 0 40px #00f0ff;
+}
+
+.glow-red {
+  text-shadow: 0 0 10px #ff073a, 0 0 20px #ff073a, 0 0 40px #ff073a;
+}
+
+.glow-purple {
+  text-shadow: 0 0 10px #b026ff, 0 0 20px #b026ff, 0 0 40px #b026ff;
+}
+
+.leaflet-container {
+  background: #0a0a0f !important;
+}
+
+.leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.7) contrast(1.2) saturate(0.5);
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+@keyframes radarSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.radar-spin {
+  animation: radarSpin 3s linear infinite;
+}
+
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+.ping-slow {
+  animation: ping-slow 2s ease-out infinite;
+}
+```
+
+---
+
+### Ouvre `src/App.css` et **supprime tout** le contenu (laisse le fichier vide)
+
+---
+
+✅ **Dis-moi "ok" quand c'est fait et on passe au fichier `App.jsx`.**
