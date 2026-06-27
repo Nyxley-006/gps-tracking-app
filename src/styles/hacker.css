@@ -1,0 +1,463 @@
+/* ════════════════════════════════════════
+   HACKER THEME - Components Styles
+════════════════════════════════════════ */
+
+/* ════════════════════════════════════════
+   TERMINAL BOX
+════════════════════════════════════════ */
+.terminal-box {
+   background: #000000;
+   border: 1px solid var(--border-neon);
+   border-radius: 6px;
+   padding: 16px;
+   font-family: var(--font-mono);
+   font-size: 12px;
+   color: var(--neon-green);
+   position: relative;
+   overflow: hidden;
+}
+
+.terminal-box::before {
+   content: '> SYSTEM ACTIVE_';
+   position: absolute;
+   top: 8px;
+   right: 12px;
+   font-size: 10px;
+   color: var(--text-muted);
+   animation: blink 1.5s infinite;
+}
+
+.terminal-header {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   margin-bottom: 12px;
+   padding-bottom: 8px;
+   border-bottom: 1px solid var(--border);
+}
+
+.terminal-dot {
+   width: 10px;
+   height: 10px;
+   border-radius: 50%;
+}
+
+.terminal-dot.red {
+   background: #ff003c;
+   box-shadow: 0 0 6px #ff003c;
+}
+
+.terminal-dot.yellow {
+   background: #ff6600;
+   box-shadow: 0 0 6px #ff6600;
+}
+
+.terminal-dot.green {
+   background: #00ff41;
+   box-shadow: 0 0 6px #00ff41;
+}
+
+.terminal-title {
+   font-size: 11px;
+   color: var(--text-secondary);
+   margin-left: 8px;
+   text-transform: uppercase;
+   letter-spacing: 2px;
+}
+
+.terminal-line {
+   display: flex;
+   gap: 8px;
+   margin-bottom: 4px;
+   font-size: 11px;
+   line-height: 1.8;
+}
+
+.terminal-prompt {
+   color: var(--neon-green);
+   /* user-select: none; */
+}
+
+.terminal-cmd {
+   color: var(--neon-cyan);
+}
+
+.terminal-output {
+   color: var(--text-secondary);
+}
+
+.terminal-error {
+   color: var(--neon-red);
+}
+
+.terminal-warn {
+   color: var(--neon-orange);
+}
+
+.terminal-success {
+   color: var(--neon-green);
+}
+
+/* ════════════════════════════════════════
+   STAT CARD - Hacker Style
+════════════════════════════════════════ */
+.hacker-card {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   padding: 20px;
+   position: relative;
+   overflow: hidden;
+   transition: var(--transition);
+   cursor: pointer;
+}
+
+.hacker-card::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 1px;
+   background: linear-gradient(90deg,
+         transparent 0%,
+         var(--neon-green) 50%,
+         transparent 100%);
+   opacity: 0;
+   transition: var(--transition);
+}
+
+.hacker-card::after {
+   content: '';
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   width: 0;
+   height: 1px;
+   background: var(--neon-green);
+   transition: width 0.4s ease;
+}
+
+.hacker-card:hover {
+   border-color: var(--border-neon);
+   box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+   transform: translateY(-2px);
+}
+
+.hacker-card:hover::before {
+   opacity: 1;
+}
+
+.hacker-card:hover::after {
+   width: 100%;
+}
+
+/* Card corners */
+.hacker-card .corner {
+   position: absolute;
+   width: 8px;
+   height: 8px;
+   border-color: var(--neon-green);
+   border-style: solid;
+   opacity: 0.6;
+}
+
+.hacker-card .corner-tl {
+   top: 4px;
+   left: 4px;
+   border-width: 1px 0 0 1px;
+}
+
+.hacker-card .corner-tr {
+   top: 4px;
+   right: 4px;
+   border-width: 1px 1px 0 0;
+}
+
+.hacker-card .corner-bl {
+   bottom: 4px;
+   left: 4px;
+   border-width: 0 0 1px 1px;
+}
+
+.hacker-card .corner-br {
+   bottom: 4px;
+   right: 4px;
+   border-width: 0 1px 1px 0;
+}
+
+/* ════════════════════════════════════════
+   NEON TEXT
+════════════════════════════════════════ */
+.neon-text-green {
+   color: var(--neon-green);
+   text-shadow:
+      0 0 7px var(--neon-green),
+      0 0 10px var(--neon-green),
+      0 0 21px var(--neon-green);
+}
+
+.neon-text-cyan {
+   color: var(--neon-cyan);
+   text-shadow:
+      0 0 7px var(--neon-cyan),
+      0 0 10px var(--neon-cyan),
+      0 0 21px var(--neon-cyan);
+}
+
+.neon-text-red {
+   color: var(--neon-red);
+   text-shadow:
+      0 0 7px var(--neon-red),
+      0 0 10px var(--neon-red),
+      0 0 21px var(--neon-red);
+}
+
+/* ════════════════════════════════════════
+   NEON BORDER
+════════════════════════════════════════ */
+.neon-border-green {
+   border: 1px solid var(--neon-green);
+   box-shadow:
+      0 0 5px rgba(0, 255, 65, 0.3),
+      inset 0 0 5px rgba(0, 255, 65, 0.1);
+}
+
+.neon-border-cyan {
+   border: 1px solid var(--neon-cyan);
+   box-shadow:
+      0 0 5px rgba(0, 255, 255, 0.3),
+      inset 0 0 5px rgba(0, 255, 255, 0.1);
+}
+
+.neon-border-red {
+   border: 1px solid var(--neon-red);
+   box-shadow:
+      0 0 5px rgba(255, 0, 60, 0.3),
+      inset 0 0 5px rgba(255, 0, 60, 0.1);
+}
+
+/* ════════════════════════════════════════
+   TABLE - Hacker Style
+════════════════════════════════════════ */
+.hacker-table {
+   width: 100%;
+   border-collapse: collapse;
+   font-family: var(--font-mono);
+   font-size: 12px;
+}
+
+.hacker-table thead tr {
+   border-bottom: 1px solid var(--border-neon);
+}
+
+.hacker-table thead th {
+   padding: 10px 14px;
+   text-align: left;
+   color: var(--neon-green);
+   font-weight: 400;
+   text-transform: uppercase;
+   letter-spacing: 1.5px;
+   font-size: 10px;
+}
+
+.hacker-table tbody tr {
+   border-bottom: 1px solid var(--border);
+   transition: var(--transition);
+}
+
+.hacker-table tbody tr:hover {
+   background: rgba(0, 255, 65, 0.03);
+   border-color: var(--border-neon);
+}
+
+.hacker-table tbody td {
+   padding: 12px 14px;
+   color: var(--text-primary);
+   vertical-align: middle;
+}
+
+/* ════════════════════════════════════════
+   LOADING SCREEN
+════════════════════════════════════════ */
+.hacker-loading {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   gap: 20px;
+   background: var(--bg-primary);
+}
+
+.hacker-loading .loading-logo {
+   font-size: 48px;
+   animation: pulse 1.5s ease-in-out infinite;
+}
+
+.hacker-loading .loading-text {
+   font-family: var(--font-mono);
+   color: var(--neon-green);
+   font-size: 14px;
+   letter-spacing: 3px;
+   text-transform: uppercase;
+   animation: blink 1s infinite;
+}
+
+.hacker-loading .loading-bar {
+   width: 200px;
+   height: 2px;
+   background: var(--border);
+   border-radius: 1px;
+   overflow: hidden;
+}
+
+.hacker-loading .loading-progress {
+   height: 100%;
+   background: var(--neon-green);
+   box-shadow: var(--glow-green);
+   animation: loadingBar 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingBar {
+   0% {
+      width: 0%;
+      margin-left: 0;
+   }
+
+   50% {
+      width: 100%;
+      margin-left: 0;
+   }
+
+   100% {
+      width: 0%;
+      margin-left: 100%;
+   }
+}
+
+/* ════════════════════════════════════════
+   SECTION HEADER
+════════════════════════════════════════ */
+.section-header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-bottom: 16px;
+}
+
+.section-title {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+   font-size: 13px;
+   color: var(--neon-green);
+   text-transform: uppercase;
+   letter-spacing: 2px;
+}
+
+.section-title::before {
+   content: '//';
+   color: var(--text-muted);
+   font-size: 11px;
+}
+
+/* ════════════════════════════════════════
+   DIVIDER
+════════════════════════════════════════ */
+.hacker-divider {
+   height: 1px;
+   background: linear-gradient(90deg,
+         transparent,
+         var(--border-neon),
+         transparent);
+   margin: 16px 0;
+}
+
+/* ════════════════════════════════════════
+   TOOLTIP
+════════════════════════════════════════ */
+.hacker-tooltip {
+   position: absolute;
+   background: var(--bg-card);
+   border: 1px solid var(--border-neon);
+   border-radius: 4px;
+   padding: 6px 10px;
+   font-size: 11px;
+   color: var(--neon-green);
+   white-space: nowrap;
+   z-index: 9999;
+   box-shadow: var(--glow-green);
+   pointer-events: none;
+}
+
+/* ════════════════════════════════════════
+   MODAL
+════════════════════════════════════════ */
+.hacker-overlay {
+   position: fixed;
+   inset: 0;
+   background: rgba(0, 0, 0, 0.85);
+   z-index: 1000;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   animation: fadeIn 0.2s ease;
+   /* backdrop-filter: blur(4px); */
+}
+
+.hacker-modal {
+   background: var(--bg-card);
+   border: 1px solid var(--border-neon);
+   border-radius: 8px;
+   padding: 24px;
+   width: 100%;
+   max-width: 500px;
+   box-shadow: var(--glow-green);
+   animation: slideDown 0.3s ease;
+   position: relative;
+   overflow: hidden;
+}
+
+.hacker-modal::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   height: 2px;
+   background: linear-gradient(90deg,
+         var(--neon-green),
+         var(--neon-cyan),
+         var(--neon-green));
+}
+
+.hacker-modal-header {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-bottom: 20px;
+   padding-bottom: 12px;
+   border-bottom: 1px solid var(--border);
+}
+
+.hacker-modal-title {
+   font-size: 14px;
+   color: var(--neon-green);
+   text-transform: uppercase;
+   letter-spacing: 2px;
+}
+
+.hacker-modal-close {
+   background: none;
+   border: none;
+   color: var(--text-secondary);
+   cursor: pointer;
+   font-size: 18px;
+   transition: var(--transition);
+   font-family: var(--font-mono);
+}
+
+.hacker-modal-close:hover {
+   color: var(--neon-red);
+}

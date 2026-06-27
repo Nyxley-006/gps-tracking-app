@@ -1,0 +1,422 @@
+/* ════════════════════════════════════════
+   BLINK - Pour les status dots
+════════════════════════════════════════ */
+@keyframes blink {
+
+   0%,
+   100% {
+      opacity: 1;
+   }
+
+   50% {
+      opacity: 0.2;
+   }
+}
+
+/* ════════════════════════════════════════
+   PULSE - Pour les marqueurs GPS
+════════════════════════════════════════ */
+@keyframes pulse {
+   0% {
+      transform: scale(1);
+      opacity: 1;
+   }
+
+   50% {
+      transform: scale(1.15);
+      opacity: 0.7;
+   }
+
+   100% {
+      transform: scale(1);
+      opacity: 1;
+   }
+}
+
+@keyframes pulseRing {
+   0% {
+      transform: scale(0.8);
+      opacity: 1;
+   }
+
+   100% {
+      transform: scale(2.5);
+      opacity: 0;
+   }
+}
+
+/* ════════════════════════════════════════
+   GLOW - Pour les bordures neon
+════════════════════════════════════════ */
+@keyframes glowGreen {
+
+   0%,
+   100% {
+      box-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
+   }
+
+   50% {
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+   }
+}
+
+@keyframes glowCyan {
+
+   0%,
+   100% {
+      box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+   }
+
+   50% {
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+   }
+}
+
+@keyframes glowRed {
+
+   0%,
+   100% {
+      box-shadow: 0 0 5px rgba(255, 0, 60, 0.3);
+   }
+
+   50% {
+      box-shadow: 0 0 20px rgba(255, 0, 60, 0.8);
+   }
+}
+
+/* ════════════════════════════════════════
+   SCAN LINE - Style hacker
+════════════════════════════════════════ */
+@keyframes scanLine {
+   0% {
+      top: -10%;
+   }
+
+   100% {
+      top: 110%;
+   }
+}
+
+@keyframes scanGlow {
+
+   0%,
+   100% {
+      opacity: 0.3;
+   }
+
+   50% {
+      opacity: 0.8;
+   }
+}
+
+/* ════════════════════════════════════════
+   TYPING - Style terminal
+════════════════════════════════════════ */
+@keyframes typing {
+   from {
+      width: 0;
+   }
+
+   to {
+      width: 100%;
+   }
+}
+
+@keyframes cursor {
+
+   0%,
+   100% {
+      opacity: 1;
+   }
+
+   50% {
+      opacity: 0;
+   }
+}
+
+/* ════════════════════════════════════════
+   FADE
+════════════════════════════════════════ */
+@keyframes fadeIn {
+   from {
+      opacity: 0;
+      transform: translateY(10px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+@keyframes fadeInLeft {
+   from {
+      opacity: 0;
+      transform: translateX(-20px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+@keyframes fadeInRight {
+   from {
+      opacity: 0;
+      transform: translateX(20px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateX(0);
+   }
+}
+
+/* ════════════════════════════════════════
+   SLIDE
+════════════════════════════════════════ */
+@keyframes slideDown {
+   from {
+      opacity: 0;
+      transform: translateY(-10px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+@keyframes slideUp {
+   from {
+      opacity: 0;
+      transform: translateY(10px);
+   }
+
+   to {
+      opacity: 1;
+      transform: translateY(0);
+   }
+}
+
+/* ════════════════════════════════════════
+   ROTATE - Logo GPS
+════════════════════════════════════════ */
+@keyframes rotate {
+   from {
+      transform: rotate(0deg);
+   }
+
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+@keyframes rotateSlow {
+   from {
+      transform: rotate(0deg);
+   }
+
+   to {
+      transform: rotate(360deg);
+   }
+}
+
+/* ════════════════════════════════════════
+   GLITCH - Style hacker
+════════════════════════════════════════ */
+@keyframes glitch {
+   0% {
+      clip-path: inset(40% 0 61% 0);
+      transform: translate(-2px, 0);
+   }
+
+   20% {
+      clip-path: inset(92% 0 1% 0);
+      transform: translate(2px, 0);
+   }
+
+   40% {
+      clip-path: inset(43% 0 1% 0);
+      transform: translate(-2px, 0);
+   }
+
+   60% {
+      clip-path: inset(25% 0 58% 0);
+      transform: translate(2px, 0);
+   }
+
+   80% {
+      clip-path: inset(54% 0 7% 0);
+      transform: translate(-2px, 0);
+   }
+
+   100% {
+      clip-path: inset(58% 0 43% 0);
+      transform: translate(0);
+   }
+}
+
+@keyframes glitchTop {
+
+   0%,
+   100% {
+      clip-path: inset(0 0 90% 0);
+      transform: translate(-2px, -2px);
+   }
+
+   25% {
+      clip-path: inset(0 0 85% 0);
+      transform: translate(2px, -2px);
+   }
+
+   50% {
+      clip-path: inset(0 0 80% 0);
+      transform: translate(-2px, 2px);
+   }
+
+   75% {
+      clip-path: inset(0 0 88% 0);
+      transform: translate(2px, 2px);
+   }
+}
+
+/* ════════════════════════════════════════
+   DATA FLOW - Lignes de données
+════════════════════════════════════════ */
+@keyframes dataFlow {
+   0% {
+      transform: translateY(-100%);
+      opacity: 0;
+   }
+
+   10% {
+      opacity: 1;
+   }
+
+   90% {
+      opacity: 1;
+   }
+
+   100% {
+      transform: translateY(100%);
+      opacity: 0;
+   }
+}
+
+/* ════════════════════════════════════════
+   CLASSES UTILITAIRES
+════════════════════════════════════════ */
+
+/* Fade In */
+.animate-fadeIn {
+   animation: fadeIn 0.3s ease forwards;
+}
+
+.animate-fadeInLeft {
+   animation: fadeInLeft 0.3s ease forwards;
+}
+
+.animate-fadeInRight {
+   animation: fadeInRight 0.3s ease forwards;
+}
+
+.animate-slideDown {
+   animation: slideDown 0.3s ease forwards;
+}
+
+.animate-slideUp {
+   animation: slideUp 0.3s ease forwards;
+}
+
+/* Glow */
+.animate-glowGreen {
+   animation: glowGreen 2s ease-in-out infinite;
+}
+
+.animate-glowCyan {
+   animation: glowCyan 2s ease-in-out infinite;
+}
+
+.animate-glowRed {
+   animation: glowRed 2s ease-in-out infinite;
+}
+
+/* Pulse */
+.animate-pulse {
+   animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-blink {
+   animation: blink 1.5s ease-in-out infinite;
+}
+
+/* Rotate */
+.animate-rotate {
+   animation: rotate 2s linear infinite;
+}
+
+.animate-rotateSlow {
+   animation: rotateSlow 8s linear infinite;
+}
+
+/* Glitch */
+.animate-glitch {
+   animation: glitch 0.5s linear infinite;
+}
+
+/* Scan Line Effect */
+.scan-effect {
+   position: relative;
+   overflow: hidden;
+}
+
+.scan-effect::after {
+   content: '';
+   position: absolute;
+   left: 0;
+   width: 100%;
+   height: 2px;
+   background: linear-gradient(90deg,
+         transparent,
+         var(--neon-green),
+         transparent);
+   animation: scanLine 3s linear infinite;
+   opacity: 0.4;
+}
+
+/* Typing Effect */
+.typing-effect {
+   overflow: hidden;
+   white-space: nowrap;
+   border-right: 2px solid var(--neon-green);
+   animation:
+      typing 2s steps(30) forwards,
+      cursor 0.8s step-end infinite;
+}
+
+/* Glitch Text */
+.glitch-text {
+   position: relative;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+   content: attr(data-text);
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+}
+
+.glitch-text::before {
+   color: var(--neon-cyan);
+   animation: glitchTop 3s infinite linear;
+}
+
+.glitch-text::after {
+   color: var(--neon-red);
+   animation: glitch 3s infinite linear;
+}

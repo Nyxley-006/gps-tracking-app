@@ -1,0 +1,340 @@
+{
+  "devices": [
+    {
+      "id": "1",
+      "name": "Camion 01",
+      "imei": "123456789012345",
+      "type": "truck",
+      "status": "online",
+      "speed": 65,
+      "battery": 85,
+      "fuel": 70,
+      "lastUpdate": "2024-01-15T10:30:00Z",
+      "position": {
+        "lat": -18.8792,
+        "lng": 47.5079,
+        "address": "Antananarivo Centre"
+      },
+      "driver": {
+        "name": "Rakoto Andry",
+        "phone": "0341234567"
+      },
+      "plateNumber": "1234 TAA",
+      "totalDistance": 1250
+    },
+    {
+      "id": "2",
+      "name": "Fourgon 02",
+      "imei": "123456789012346",
+      "type": "van",
+      "status": "online",
+      "speed": 45,
+      "battery": 72,
+      "fuel": 55,
+      "lastUpdate": "2024-01-15T10:28:00Z",
+      "position": {
+        "lat": -18.91,
+        "lng": 47.52,
+        "address": "Analakely"
+      },
+      "driver": {
+        "name": "Rabe Hery",
+        "phone": "0342345678"
+      },
+      "plateNumber": "2345 TAA",
+      "totalDistance": 890
+    },
+    {
+      "id": "3",
+      "name": "Moto 01",
+      "imei": "123456789012347",
+      "type": "motorcycle",
+      "status": "idle",
+      "speed": 0,
+      "battery": 90,
+      "fuel": 80,
+      "lastUpdate": "2024-01-15T09:45:00Z",
+      "position": {
+        "lat": -18.85,
+        "lng": 47.48,
+        "address": "Ambohimanga"
+      },
+      "driver": {
+        "name": "Rasoa Tahiry",
+        "phone": "0343456789"
+      },
+      "plateNumber": "3456 TBB",
+      "totalDistance": 340
+    },
+    {
+      "id": "4",
+      "name": "Bus 01",
+      "imei": "123456789012348",
+      "type": "bus",
+      "status": "online",
+      "speed": 30,
+      "battery": 60,
+      "fuel": 45,
+      "lastUpdate": "2024-01-15T10:25:00Z",
+      "position": {
+        "lat": -18.9,
+        "lng": 47.535,
+        "address": "Ivandry"
+      },
+      "driver": {
+        "name": "Randria Jean",
+        "phone": "0344567890"
+      },
+      "plateNumber": "4567 TAA",
+      "totalDistance": 5600
+    },
+    {
+      "id": "5",
+      "name": "Voiture 01",
+      "imei": "123456789012349",
+      "type": "car",
+      "status": "offline",
+      "speed": 0,
+      "battery": 15,
+      "fuel": 20,
+      "lastUpdate": "2024-01-14T18:00:00Z",
+      "position": {
+        "lat": -18.93,
+        "lng": 47.51,
+        "address": "Ankorondrano"
+      },
+      "driver": {
+        "name": "Voahangy Soa",
+        "phone": "0345678901"
+      },
+      "plateNumber": "5678 TAA",
+      "totalDistance": 2100
+    },
+    {
+      "id": "6",
+      "name": "Telephone 01",
+      "imei": "123456789012350",
+      "type": "phone",
+      "status": "online",
+      "speed": 5,
+      "battery": 65,
+      "fuel": null,
+      "lastUpdate": "2024-01-15T10:29:00Z",
+      "position": {
+        "lat": -18.89,
+        "lng": 47.525,
+        "address": "Tsaralalana"
+      },
+      "driver": {
+        "name": "Nirina Fanja",
+        "phone": "0346789012"
+      },
+      "plateNumber": "I-Phone 15 Pro",
+      "totalDistance": 120
+    },
+    {
+      "id": "7",
+      "name": "Drone 01",
+      "imei": "123456789012351",
+      "type": "drone",
+      "status": "idle",
+      "speed": 0,
+      "battery": 50,
+      "fuel": null,
+      "lastUpdate": "2024-01-15T08:00:00Z",
+      "position": {
+        "lat": -18.865,
+        "lng": 47.54,
+        "address": "Ambatobe"
+      },
+      "driver": {
+        "name": "Lalaina Mamy",
+        "phone": "0347890123"
+      },
+      "plateNumber": "DrnXS",
+      "totalDistance": 45
+    },
+    {
+      "name": "MY Phone",
+      "imei": "479750937230421",
+      "type": "phone",
+      "status": "online",
+      "speed": 25,
+      "battery": 64,
+      "fuel": null,
+      "position": {
+        "lat": -13.346627385173086,
+        "lng": 48.298790989199375,
+        "address": "Nosy Be",
+        "city": "Nosy Be"
+      },
+      "driver": {
+        "name": "Admin",
+        "phone": "034128895"
+      },
+      "plateNumber": "Huawei Enjoy 10",
+      "totalDistance": 657,
+      "lastUpdate": "2026-06-26T17:13:50.950Z",
+      "id": "-OC8IHv1Gew"
+    }
+  ],
+  "positions": [
+    {
+      "id": "1",
+      "deviceId": 1,
+      "lat": -18.8792,
+      "lng": 47.5079,
+      "speed": 65,
+      "address": "Antananarivo Centre",
+      "timestamp": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "history": [
+    {
+      "id": "1",
+      "deviceId": 1,
+      "date": "2024-01-15",
+      "distance": 125,
+      "duration": 180,
+      "maxSpeed": 95,
+      "avgSpeed": 55,
+      "positions": [
+        {
+          "lat": -18.87,
+          "lng": 47.5,
+          "speed": 0,
+          "timestamp": "2024-01-15T08:00:00Z"
+        },
+        {
+          "lat": -18.875,
+          "lng": 47.504,
+          "speed": 25,
+          "timestamp": "2024-01-15T08:30:00Z"
+        },
+        {
+          "lat": -18.878,
+          "lng": 47.506,
+          "speed": 45,
+          "timestamp": "2024-01-15T09:00:00Z"
+        },
+        {
+          "lat": -18.879,
+          "lng": 47.5075,
+          "speed": 65,
+          "timestamp": "2024-01-15T09:30:00Z"
+        },
+        {
+          "lat": -18.8792,
+          "lng": 47.5079,
+          "speed": 65,
+          "timestamp": "2024-01-15T10:30:00Z"
+        }
+      ]
+    }
+  ],
+  "geofences": [
+    {
+      "id": "1",
+      "name": "Zone Antananarivo",
+      "type": "circle",
+      "color": "#00ff41",
+      "center": {
+        "lat": -18.8792,
+        "lng": 47.5079
+      },
+      "radius": 2000,
+      "active": true,
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "2",
+      "name": "Zone Ivato Aéroport",
+      "type": "circle",
+      "color": "#00ffff",
+      "center": {
+        "lat": -18.7969,
+        "lng": 47.4788
+      },
+      "radius": 1500,
+      "active": true,
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "3",
+      "name": "Zone Industrielle",
+      "type": "circle",
+      "color": "#ff6600",
+      "center": {
+        "lat": -18.93,
+        "lng": 47.51
+      },
+      "radius": 1000,
+      "active": false,
+      "createdAt": "2024-01-05T00:00:00Z"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "1",
+      "deviceId": 1,
+      "deviceName": "Camion 01",
+      "type": "speeding",
+      "message": "Excès de vitesse - 120 km/h",
+      "severity": "danger",
+      "timestamp": "2024-01-15T09:15:00Z",
+      "read": true
+    },
+    {
+      "id": "2",
+      "deviceId": 5,
+      "deviceName": "Voiture 01",
+      "type": "lowBattery",
+      "message": "Batterie faible - 15%",
+      "severity": "warning",
+      "timestamp": "2024-01-14T17:45:00Z",
+      "read": true
+    },
+    {
+      "id": "3",
+      "deviceId": 3,
+      "deviceName": "Moto 01",
+      "type": "geofence",
+      "message": "Sortie de zone autorisée",
+      "severity": "danger",
+      "timestamp": "2024-01-15T07:30:00Z",
+      "read": true
+    },
+    {
+      "id": "4",
+      "deviceId": 2,
+      "deviceName": "Fourgon 02",
+      "type": "ignition",
+      "message": "Moteur démarré",
+      "severity": "info",
+      "timestamp": "2024-01-15T07:00:00Z",
+      "read": true
+    },
+    {
+      "id": "5",
+      "deviceId": 6,
+      "deviceName": "Telephone 01",
+      "type": "disconnect",
+      "message": "Appareil déconnecté",
+      "severity": "warning",
+      "timestamp": "2024-01-15T06:30:00Z",
+      "read": true
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "admin123",
+      "email": "admin@gpstracker.com",
+      "role": "admin",
+      "avatar": ""
+    }
+  ],
+  "reports": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
