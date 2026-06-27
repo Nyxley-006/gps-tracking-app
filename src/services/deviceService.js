@@ -18,30 +18,92 @@ const deviceService = {
    },
 
    // ── ADD ──────────────────────────────
+
    add: async (deviceData) => {
   // ════════════════════════════════════════
-  //  VILLES MADAGASCAR
+  //  PROVINCES MADAGASCAR (zones intérieures)
+  //  Lat/Lng au centre + rayon de la zone
   // ════════════════════════════════════════
-  const madagascarCities = [
-    { name: 'Antananarivo', lat: -18.8792, lng: 47.5079 },
-    { name: 'Toamasina',    lat: -18.1492, lng: 49.4023 },
-    { name: 'Antsirabe',    lat: -19.8659, lng: 47.0333 },
-    { name: 'Fianarantsoa', lat: -21.4545, lng: 47.0833 },
-    { name: 'Mahajanga',    lat: -15.7167, lng: 46.3167 },
-    { name: 'Toliara',      lat: -23.3500, lng: 43.6667 },
-    { name: 'Antsiranana',  lat: -12.2787, lng: 49.2917 },
-    { name: 'Morondava',    lat: -20.2833, lng: 44.2833 },
-    { name: 'Manakara',     lat: -22.1500, lng: 48.0167 },
-    { name: 'Sambava',      lat: -14.2667, lng: 50.1667 },
-    { name: 'Nosy Be',      lat: -13.3333, lng: 48.2667 },
-    { name: 'Ambositra',    lat: -20.5333, lng: 47.2500 }
+  const madagascarProvinces = [
+    {
+      name: 'Antananarivo',
+      lat: -18.8792,
+      lng: 47.5079,
+      radius: 0.15  // ~15 km autour
+    },
+    {
+      name: 'Antsirabe',
+      lat: -19.8659,
+      lng: 47.0333,
+      radius: 0.10
+    },
+    {
+      name: 'Fianarantsoa',
+      lat: -21.4545,
+      lng: 47.0833,
+      radius: 0.10
+    },
+    {
+      name: 'Ambositra',
+      lat: -20.5333,
+      lng: 47.2500,
+      radius: 0.08
+    },
+    {
+      name: 'Ambatolampy',
+      lat: -19.3833,
+      lng: 47.4333,
+      radius: 0.08
+    },
+    {
+      name: 'Moramanga',
+      lat: -18.9500,
+      lng: 48.2333,
+      radius: 0.10
+    },
+    {
+      name: 'Ankazobe',
+      lat: -18.3167,
+      lng: 47.1167,
+      radius: 0.08
+    },
+    {
+      name: 'Manjakandriana',
+      lat: -18.9167,
+      lng: 47.8000,
+      radius: 0.08
+    },
+    {
+      name: 'Arivonimamo',
+      lat: -19.0167,
+      lng: 47.1833,
+      radius: 0.08
+    },
+    {
+      name: 'Anjozorobe',
+      lat: -18.4000,
+      lng: 47.8667,
+      radius: 0.08
+    },
+    {
+      name: 'Tsiroanomandidy',
+      lat: -18.7667,
+      lng: 46.0500,
+      radius: 0.10
+    },
+    {
+      name: 'Ihosy',
+      lat: -22.4042,
+      lng: 46.1250,
+      radius: 0.10
+    }
   ];
 
   // ════════════════════════════════════════
   //  GENERATEUR DE POSITION UNIQUE
+  //  Dans une province (pas en bord de mer)
   // ════════════════════════════════════════
   const generateUniquePosition = async () => {
-    // Récupérer toutes les positions existantes
     const existingDevices = await api.get('/devices');
     const existingPositions = existingDevices.data.map(d => ({
       lat: d.position.lat,
@@ -52,34 +114,33 @@ const deviceService = {
     let position;
 
     while (attempts < 50) {
-      // Choisir une ville aléatoire
-      const city = madagascarCities[
-        Math.floor(Math.random() * madagascarCities.length)
+      // Choisir une province aléatoire
+      const province = madagascarProvinces[
+        Math.floor(Math.random() * madagascarProvinces.length)
       ];
 
-      // Décalage aléatoire autour de la ville
-      // Plus grand pour éviter les collisions
-      const offsetLat = (Math.random() - 0.5) * 0.15; // ±0.075°
-      const offsetLng = (Math.random() - 0.5) * 0.15;
+      // Position aléatoire DANS la province (cercle autour du centre)
+      const angle    = Math.random() * 2 * Math.PI;
+      const distance = Math.random() * province.radius;
 
-      const candidateLat = city.lat + offsetLat;
-      const candidateLng = city.lng + offsetLng;
+      const candidateLat = province.lat + Math.cos(angle) * distance;
+      const candidateLng = province.lng + Math.sin(angle) * distance;
 
-      // Vérifier qu'aucun device n'est trop proche (min 0.01°)
+      // Vérifier qu'aucun device n'est trop proche
       const tooClose = existingPositions.some(pos => {
-        const distance = Math.sqrt(
+        const dist = Math.sqrt(
           Math.pow(pos.lat - candidateLat, 2) +
           Math.pow(pos.lng - candidateLng, 2)
         );
-        return distance < 0.01;
+        return dist < 0.01;
       });
 
       if (!tooClose) {
         position = {
           lat:     candidateLat,
           lng:     candidateLng,
-          address: city.name,
-          city:    city.name
+          address: province.name,
+          city:    province.name
         };
         break;
       }
@@ -87,16 +148,19 @@ const deviceService = {
       attempts++;
     }
 
-    // Fallback si toutes les tentatives échouent
+    // Fallback
     if (!position) {
-      const city = madagascarCities[
-        Math.floor(Math.random() * madagascarCities.length)
+      const province = madagascarProvinces[
+        Math.floor(Math.random() * madagascarProvinces.length)
       ];
+      const angle    = Math.random() * 2 * Math.PI;
+      const distance = Math.random() * province.radius;
+
       position = {
-        lat:     city.lat + (Math.random() - 0.5) * 0.3,
-        lng:     city.lng + (Math.random() - 0.5) * 0.3,
-        address: city.name,
-        city:    city.name
+        lat:     province.lat + Math.cos(angle) * distance,
+        lng:     province.lng + Math.sin(angle) * distance,
+        address: province.name,
+        city:    province.name
       };
     }
 
@@ -142,10 +206,10 @@ const deviceService = {
   // ════════════════════════════════════════
   //  CONSTRUCTION DU DEVICE
   // ════════════════════════════════════════
-  const randomStatus  = generateRandomStatus();
-  const randomSpeed   = generateSpeed(randomStatus);
-  const randomBattery = generateBattery(randomStatus);
-  const randomFuel    = generateFuel(deviceData.type);
+  const randomStatus   = generateRandomStatus();
+  const randomSpeed    = generateSpeed(randomStatus);
+  const randomBattery  = generateBattery(randomStatus);
+  const randomFuel     = generateFuel(deviceData.type);
   const uniquePosition = await generateUniquePosition();
 
   const newDevice = {
@@ -162,14 +226,6 @@ const deviceService = {
   const response = await api.post('/devices', newDevice);
   return response.data;
 },
-
-   // ── GET POSITIONS ────────────────────
-   getPositions: async (deviceId) => {
-      const response = await api.get(
-         `/positions?deviceId=${deviceId}`
-      );
-      return response.data;
-   },
 
    // ── UPDATE POSITION ──────────────────
    updatePosition: async (deviceId, position) => {
@@ -219,6 +275,11 @@ const deviceService = {
          offline: devices.filter(d => d.status === 'offline').length
       };
    },
+  
+   update: async (id, deviceData) => {
+  const response = await api.put(`/devices/${id}`, deviceData);
+  return response.data;
+},
 
    delete: async (id) => {
       const response = await api.delete(`/devices/${id}`);

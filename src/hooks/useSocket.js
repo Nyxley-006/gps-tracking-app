@@ -136,6 +136,124 @@ const calcBearing = (lat1, lng1, lat2, lng2) => {
   return Math.atan2(lng2 - lng1, lat2 - lat1);
 };
 
+
+// ════════════════════════════════════════
+//  TRACKING ZONES (état précédent)
+// ════════════════════════════════════════
+const deviceZonesState = {};  // { deviceId: [zoneIds] }
+
+// Calcul si device est dans zone
+const isInZone = (devicePos, zone) => {
+  if (!devicePos || !zone.center) return false;
+  const R = 6371000;
+  const lat1 = devicePos.lat * Math.PI / 180;
+  const lat2 = zone.center.lat * Math.PI / 180;
+  const dLat = (zone.center.lat - devicePos.lat) * Math.PI / 180;
+  const dLng = (zone.center.lng - devicePos.lng) * Math.PI / 180;
+
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(dLng / 2) ** 2;
+
+  const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return distance <= zone.radius;
+};
+
+// Détecter entrée/sortie de zone
+const detectZoneChanges = (device, geofences, dispatch) => {
+  if (!device.position) return;
+
+  // ✅ Filtrer : seulement les zones où ce device est ASSIGNÉ
+  const relevantZones = geofences.filter(g =>
+    g.active &&
+    Array.isArray(g.assignedDevices) &&
+    g.assignedDevices.includes(device.id)
+  );
+
+  if (relevantZones.length === 0) {
+    // Device pas assigné à aucune zone → pas d'alertes
+    return;
+  }
+
+  const currentZones = relevantZones.filter(z => isInZone(device.position, z));
+  const currentZoneIds = currentZones.map(z => z.id);
+  const previousZoneIds = deviceZonesState[device.id] || [];
+
+  // ZONES ENTRÉES
+  const entered = currentZoneIds.filter(id => !previousZoneIds.includes(id));
+  entered.forEach(zoneId => {
+    const zone = relevantZones.find(z => z.id === zoneId);
+    if (!zone || zone.alertOnEntry === false) return;
+
+    const lat = device.position.lat.toFixed(5);
+    const lng = device.position.lng.toFixed(5);
+
+    const alert = {
+      id:         Date.now() + Math.random(),
+      type:       'geofence',
+      message:    `✓ ${device.name} ENTRÉ dans sa zone "${zone.name}" [${lat}, ${lng}]`,
+      severity:   'info',
+      deviceId:   device.id,
+      deviceName: device.name,
+      position: {
+        lat: device.position.lat,
+        lng: device.position.lng,
+        address: device.position.address
+      },
+      zoneId:    zone.id,
+      zoneName:  zone.name,
+      eventType: 'entry',
+      read:      false,
+      timestamp: new Date().toISOString()
+    };
+
+    dispatch(addAlertLocal(alert));
+    dispatch(addNotification({
+      type: 'info',
+      message: `${device.name} entré dans "${zone.name}"`,
+      device: device.name
+    }));
+  });
+
+  // ZONES SORTIES (CRITIQUE car device assigné)
+  const exited = previousZoneIds.filter(id => !currentZoneIds.includes(id));
+  exited.forEach(zoneId => {
+    const zone = relevantZones.find(z => z.id === zoneId);
+    if (!zone || zone.alertOnExit === false) return;
+
+    const lat = device.position.lat.toFixed(5);
+    const lng = device.position.lng.toFixed(5);
+
+    const alert = {
+      id:         Date.now() + Math.random(),
+      type:       'geofence',
+      message:    `⚠ ALERTE: ${device.name} a QUITTÉ sa zone "${zone.name}" [${lat}, ${lng}]`,
+      severity:   'danger',
+      deviceId:   device.id,
+      deviceName: device.name,
+      position: {
+        lat: device.position.lat,
+        lng: device.position.lng,
+        address: device.position.address
+      },
+      zoneId:    zone.id,
+      zoneName:  zone.name,
+      eventType: 'exit',
+      read:      false,
+      timestamp: new Date().toISOString()
+    };
+
+    dispatch(addAlertLocal(alert));
+    dispatch(addNotification({
+      type: 'danger',
+      message: `${device.name} a quitté "${zone.name}"`,
+      device: device.name
+    }));
+  });
+
+  deviceZonesState[device.id] = currentZoneIds;
+};
+
 // ════════════════════════════════════════
 //  GÉNÉRATEUR D'ALERTES
 // ════════════════════════════════════════
@@ -317,14 +435,153 @@ const sendAlerts = (alerts, device, dispatch) => {
 //  HOOK PRINCIPAL
 // ════════════════════════════════════════
 const useSocket = () => {
-  const dispatch    = useDispatch();
-  const devicesList = useSelector((state) => state.devices.list);
+  const dispatch       = useDispatch();
+  const devicesList    = useSelector((state) => state.devices.list);
+  const geofencesList  = useSelector((state) => state.geofences.list);
   const intervalRef = useRef(null);
   const devicesRef  = useRef(devicesList);
 
   useEffect(() => {
     devicesRef.current = devicesList;
   }, [devicesList]);
+
+    // ════════════════════════════════════════
+  //  GÉNÉRER ALERTES INITIALES AU DÉMARRAGE
+  // ════════════════════════════════════════
+  const initialAlertsGenerated = useRef(false);
+
+  useEffect(() => {
+    // Attendre que les devices soient chargés
+    if (devicesList.length === 0 || initialAlertsGenerated.current) return;
+
+    initialAlertsGenerated.current = true;
+
+    console.log('🚨 Génération alertes initiales...');
+
+    // Templates d'alertes initiales
+    const initialAlerts = [
+      {
+        type: 'speeding',
+        message: 'Excès de vitesse détecté',
+        severity: 'danger'
+      },
+      {
+        type: 'lowBattery',
+        message: 'Batterie faible',
+        severity: 'warning'
+      },
+      {
+        type: 'geofence',
+        message: 'Sortie de zone autorisée',
+        severity: 'danger'
+      },
+      {
+        type: 'ignition',
+        message: 'Moteur démarré',
+        severity: 'info'
+      },
+      {
+        type: 'disconnect',
+        message: 'Appareil déconnecté du réseau',
+        severity: 'warning'
+      },
+      {
+        type: 'lowFuel',
+        message: 'Niveau de carburant faible',
+        severity: 'warning'
+      },
+      {
+        type: 'maintenance',
+        message: 'Maintenance recommandée',
+        severity: 'info'
+      },
+      {
+        type: 'sos',
+        message: '⚠ SIGNAL SOS URGENT',
+        severity: 'danger'
+      }
+    ];
+
+    // Générer 5-8 alertes aléatoires sur différents devices
+    const numAlerts = Math.min(
+      Math.floor(Math.random() * 4) + 5,
+      devicesList.length
+    );
+
+    const usedDevices = new Set();
+
+    for (let i = 0; i < numAlerts; i++) {
+      // Choisir un device aléatoire pas encore utilisé
+      let device;
+      let attempts = 0;
+
+      do {
+        device = devicesList[Math.floor(Math.random() * devicesList.length)];
+        attempts++;
+      } while (usedDevices.has(device.id) && attempts < 20);
+
+      usedDevices.add(device.id);
+
+      // Choisir un template aléatoire
+      const template = initialAlerts[
+        Math.floor(Math.random() * initialAlerts.length)
+      ];
+
+      // Coordonnées GPS
+      const lat = device.position?.lat?.toFixed(5) || '?';
+      const lng = device.position?.lng?.toFixed(5) || '?';
+      const gpsCoords = `[${lat}, ${lng}]`;
+      const address = device.position?.address || '';
+
+      // Construire le message avec données réelles
+      let fullMessage = template.message;
+      if (template.type === 'speeding') {
+        fullMessage = `Excès vitesse - ${Math.floor(Math.random() * 40) + 70} km/h ${gpsCoords}`;
+      } else if (template.type === 'lowBattery') {
+        const battery = Math.floor(Math.random() * 15) + 5;
+        fullMessage = `Batterie ${battery < 10 ? 'critique' : 'faible'} - ${battery}% ${gpsCoords}`;
+      } else if (template.type === 'lowFuel') {
+        fullMessage = `Carburant faible - ${Math.floor(Math.random() * 15) + 10}% ${gpsCoords}`;
+      } else if (template.type === 'sos') {
+        fullMessage = `⚠ SIGNAL SOS - ${device.name} ${gpsCoords} - ${address}`;
+      } else if (template.type === 'disconnect') {
+        fullMessage = `${device.name} déconnecté ${gpsCoords} - ${address}`;
+      } else if (template.type === 'geofence') {
+        fullMessage = `Sortie de zone - ${device.name} ${gpsCoords}`;
+      } else if (template.type === 'ignition') {
+        fullMessage = `${device.name} ${template.message} ${gpsCoords}`;
+      } else if (template.type === 'maintenance') {
+        fullMessage = `Maintenance recommandée - ${device.name} ${gpsCoords}`;
+      }
+
+      // Créer l'alerte avec timestamp décalé (plus ancienne = plus tôt)
+      const minutesAgo = i * (Math.floor(Math.random() * 20) + 5);
+      const timestamp = new Date(Date.now() - minutesAgo * 60000).toISOString();
+
+      const newAlert = {
+        id:         Date.now() + Math.random() + i,
+        type:       template.type,
+        message:    fullMessage,
+        severity:   template.severity,
+        deviceId:   device.id,
+        deviceName: device.name,
+        position: {
+          lat:     device.position?.lat,
+          lng:     device.position?.lng,
+          address: device.position?.address
+        },
+        read:       false,
+        timestamp:  timestamp
+      };
+
+      // Délai progressif pour effet visuel
+      setTimeout(() => {
+        dispatch(addAlertLocal(newAlert));
+      }, i * 200);
+    }
+
+    console.log(`✅ ${numAlerts} alertes initiales générées`);
+  }, [devicesList, dispatch]);
 
   const simulate = useCallback(() => {
     const devices = devicesRef.current;
@@ -484,6 +741,20 @@ const useSocket = () => {
       // GÉNÉRER ALERTES avec position à jour
       const alerts = generateSmartAlerts(updatedDevice, state);
       sendAlerts(alerts, updatedDevice, dispatch);
+
+
+            // ════════════════════════════════════
+      //  DÉTECTION GEOFENCE AUTO
+      // ════════════════════════════════════
+      detectZoneChanges(
+        device.status === 'online' ? {
+          ...device,
+          position: { lat: safeLat || device.position.lat, lng: safeLng || device.position.lng, address }
+        } : device,
+        geofencesList,
+        dispatch
+      );
+
     });
   }, [dispatch]);
 
@@ -492,7 +763,7 @@ const useSocket = () => {
 
     intervalRef.current = setInterval(() => {
       simulate();
-    }, 4000);
+    }, 3000);
 
     return () => {
       if (intervalRef.current) {

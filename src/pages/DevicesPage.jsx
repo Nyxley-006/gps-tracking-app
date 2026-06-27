@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useDevices from '../hooks/useDevices';
-import { addDevice, deleteDevice, updateDevice } from '../store/slices/deviceSlice';
+import { addDevice, deleteDevice, updateDevice, fetchDevices } from '../store/slices/deviceSlice';
 import { DEVICE_TYPE_OPTIONS, DEFAULT_DEVICE } from '../utils/constants';
 import { getDeviceIcon, getStatusColor, getStatusLabel, formatDate } from '../utils/helpers';
 
@@ -31,29 +31,69 @@ const DevicesPage = () => {
 
   // Open modal for editing
   const handleEdit = (device) => {
-    setFormData(device);
-    setEditingDevice(device);
-    setShowModal(true);
-  };
+  // ✅ Cloner profondément pour éviter les références
+  setFormData({
+    ...device,
+    driver: { ...device.driver },
+    position: { ...device.position }
+  });
+  setEditingDevice(device);
+  setShowModal(true);
+};
 
   // Delete device
-  const handleDelete = (id) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet appareil ?')) {
-      dispatch(deleteDevice(id));
-    }
-  };
+  const handleDelete = async (id) => {
+  if (!window.confirm('⚠ Êtes-vous sûr de vouloir supprimer cet appareil ?')) {
+    return;
+  }
+
+  try {
+    await dispatch(deleteDevice(id)).unwrap();
+
+    // ✅ Force refresh
+    await dispatch(fetchDevices()).unwrap();
+  } catch (error) {
+    console.error('Erreur suppression:', error);
+  }
+};
 
   // Submit form
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (formData.imei.length !== 15) {
+    alert('⚠ L\'IMEI doit contenir exactement 15 chiffres');
+    return;
+  }
+
+  try {
     if (editingDevice) {
-      dispatch(updateDevice({ id: editingDevice.id, data: formData }));
+      console.log('📝 Updating device:', editingDevice.id, formData);
+
+      const result = await dispatch(updateDevice({
+        id: editingDevice.id,
+        data: formData
+      })).unwrap();
+
+      console.log('✅ Update result:', result);
     } else {
-      dispatch(addDevice(formData));
+      console.log('➕ Adding new device');
+      await dispatch(addDevice(formData)).unwrap();
     }
+
+    // Refresh la liste
+    await dispatch(fetchDevices()).unwrap();
+
+    // Fermer modal
     setShowModal(false);
+    setEditingDevice(null);
     setFormData(DEFAULT_DEVICE);
-  };
+
+  } catch (error) {
+    console.error('❌ Erreur:', error);
+    window.alert('Erreur lors de l\'opération: ' + (error.message || 'Inconnue'));
+  }
+};
 
   // Update form field
   const handleChange = (field, value) => {

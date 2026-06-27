@@ -41,10 +41,11 @@ export const updateDevice = createAsyncThunk(
   'devices/update',
   async ({ id, data }, { rejectWithValue }) => {
     try {
-      return await deviceService.update(id, data);
+      const result = await deviceService.update(id, data);
+      return result;
     } catch (error) {
-      console.warn('Update failed, updating locally');
-      return { ...data, id };
+      console.error('Update error:', error);
+      return rejectWithValue(error.message);
     }
   }
 );

@@ -151,31 +151,8 @@
         "name": "Lalaina Mamy",
         "phone": "0347890123"
       },
-      "plateNumber": "DrnXS",
+      "plateNumber": "Drn",
       "totalDistance": 45
-    },
-    {
-      "name": "MY Phone",
-      "imei": "479750937230421",
-      "type": "phone",
-      "status": "online",
-      "speed": 25,
-      "battery": 64,
-      "fuel": null,
-      "position": {
-        "lat": -13.346627385173086,
-        "lng": 48.298790989199375,
-        "address": "Nosy Be",
-        "city": "Nosy Be"
-      },
-      "driver": {
-        "name": "Admin",
-        "phone": "034128895"
-      },
-      "plateNumber": "Huawei Enjoy 10",
-      "totalDistance": 657,
-      "lastUpdate": "2026-06-26T17:13:50.950Z",
-      "id": "-OC8IHv1Gew"
     }
   ],
   "positions": [
@@ -242,9 +219,15 @@
         "lat": -18.8792,
         "lng": 47.5079
       },
-      "radius": 2000,
+      "radius": 100,
       "active": true,
-      "createdAt": "2024-01-01T00:00:00Z"
+      "createdAt": "2024-01-01T00:00:00Z",
+      "description": "",
+      "alertOnEntry": true,
+      "alertOnExit": true,
+      "assignedDevices": [
+        "1"
+      ]
     },
     {
       "id": "2",
@@ -269,62 +252,34 @@
         "lng": 47.51
       },
       "radius": 1000,
-      "active": false,
-      "createdAt": "2024-01-05T00:00:00Z"
+      "active": true,
+      "createdAt": "2024-01-05T00:00:00Z",
+      "description": "",
+      "alertOnEntry": true,
+      "alertOnExit": true,
+      "assignedDevices": [
+        "1",
+        "2"
+      ]
+    },
+    {
+      "name": "Fianarantsoa Centre",
+      "type": "circle",
+      "color": "#ff003c",
+      "center": {
+        "lat": -21.4545,
+        "lng": 47.0868
+      },
+      "radius": 10000,
+      "active": true,
+      "createdAt": "2026-06-27T11:24:27.226Z",
+      "id": "pjae0AW1w1g",
+      "description": "",
+      "alertOnEntry": true,
+      "alertOnExit": true
     }
   ],
-  "alerts": [
-    {
-      "id": "1",
-      "deviceId": 1,
-      "deviceName": "Camion 01",
-      "type": "speeding",
-      "message": "Excès de vitesse - 120 km/h",
-      "severity": "danger",
-      "timestamp": "2024-01-15T09:15:00Z",
-      "read": true
-    },
-    {
-      "id": "2",
-      "deviceId": 5,
-      "deviceName": "Voiture 01",
-      "type": "lowBattery",
-      "message": "Batterie faible - 15%",
-      "severity": "warning",
-      "timestamp": "2024-01-14T17:45:00Z",
-      "read": true
-    },
-    {
-      "id": "3",
-      "deviceId": 3,
-      "deviceName": "Moto 01",
-      "type": "geofence",
-      "message": "Sortie de zone autorisée",
-      "severity": "danger",
-      "timestamp": "2024-01-15T07:30:00Z",
-      "read": true
-    },
-    {
-      "id": "4",
-      "deviceId": 2,
-      "deviceName": "Fourgon 02",
-      "type": "ignition",
-      "message": "Moteur démarré",
-      "severity": "info",
-      "timestamp": "2024-01-15T07:00:00Z",
-      "read": true
-    },
-    {
-      "id": "5",
-      "deviceId": 6,
-      "deviceName": "Telephone 01",
-      "type": "disconnect",
-      "message": "Appareil déconnecté",
-      "severity": "warning",
-      "timestamp": "2024-01-15T06:30:00Z",
-      "read": true
-    }
-  ],
+  "alerts": [],
   "users": [
     {
       "id": "1",

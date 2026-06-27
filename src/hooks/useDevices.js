@@ -18,12 +18,22 @@ const useDevices = () => {
     error
   } = useSelector((state) => state.devices);
 
-  // ✅ Charger les devices UNE SEULE FOIS au démarrage
+  // Charger au démarrage
   useEffect(() => {
     if (list.length === 0) {
       dispatch(fetchDevices());
     }
   }, [dispatch, list.length]);
+
+  // ✅ Refresh quand la fenêtre redevient active (focus)
+  useEffect(() => {
+    const handleFocus = () => {
+      dispatch(fetchDevices());
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [dispatch]);
 
   const selectDevice = (device) => {
     dispatch(setSelectedDevice(device));

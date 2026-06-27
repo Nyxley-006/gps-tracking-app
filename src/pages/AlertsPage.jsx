@@ -5,6 +5,73 @@ import { ALERT_TYPES, SEVERITY_COLORS } from '../utils/constants';
 import { formatDate, timeAgo } from '../utils/helpers';
 
 // ════════════════════════════════════════
+//  AGENCES SPÉCIALISÉES
+// ════════════════════════════════════════
+const AGENTS = [
+  // ── URGENCE ──
+  { name: 'Unité Alpha-1 Rescue',     specialty: 'urgence',     phone: '0341253478' },
+  { name: 'Brigade Sigma Tactical',   specialty: 'urgence',     phone: '0342689134' },
+  { name: 'Squad Delta Emergency',    specialty: 'urgence',     phone: '0343547892' },
+
+  // ── TRACKING ──
+  { name: 'Cyber Track Division',     specialty: 'tracking',    phone: '0344196325' },
+  { name: 'GPS Hunter Squad',         specialty: 'tracking',    phone: '0345732618' },
+  { name: 'Recon Falcon Unit',        specialty: 'tracking',    phone: '0346285947' },
+
+  // ── MAINTENANCE ──
+  { name: 'Tech Repair Center',       specialty: 'maintenance', phone: '0347461259' },
+  { name: 'Hardware Fix Brigade',     specialty: 'maintenance', phone: '0348923574' },
+  { name: 'System Diagnostic Team',   specialty: 'maintenance', phone: '0349358742' },
+
+  // ── CONTACT ──
+  { name: 'Communication Center',     specialty: 'contact',     phone: '0340517896' },
+  { name: 'Field Operations Desk',    specialty: 'contact',     phone: '0340892354' },
+  { name: 'Driver Support Hub',       specialty: 'contact',     phone: '0340674128' }
+];
+
+// ════════════════════════════════════════
+//  ATTRIBUER UN AGENT SELON TYPE D'ALERTE
+// ════════════════════════════════════════
+const getAgentForAlert = (alertType, severity) => {
+  let preferredSpecialty;
+
+  // Mapping type → spécialité
+  switch (alertType) {
+    case 'sos':
+    case 'speeding':
+      preferredSpecialty = 'urgence';
+      break;
+    case 'lowBattery':
+    case 'lowFuel':
+    case 'maintenance':
+      preferredSpecialty = 'maintenance';
+      break;
+    case 'geofence':
+    case 'disconnect':
+      preferredSpecialty = 'tracking';
+      break;
+    case 'ignition':
+    default:
+      preferredSpecialty = 'contact';
+      break;
+  }
+
+  // Si danger → forcer urgence
+  if (severity === 'danger') {
+    preferredSpecialty = 'urgence';
+  }
+
+  // Filtrer les agents de la spécialité
+  const matchingAgents = AGENTS.filter(a => a.specialty === preferredSpecialty);
+
+  // Choisir un agent aléatoire
+  const agent = matchingAgents.length > 0
+    ? matchingAgents[Math.floor(Math.random() * matchingAgents.length)]
+    : AGENTS[Math.floor(Math.random() * AGENTS.length)];
+
+  return agent;
+};
+// ════════════════════════════════════════
 //  ALERT ICONS
 // ════════════════════════════════════════
 const ALERT_ICONS = {
@@ -31,13 +98,18 @@ const AlertsPage = () => {
   } = useAlerts();
 
   const [filter, setFilter] = useState('all');
+  const [interventions, setInterventions] = useState(
+  JSON.parse(localStorage.getItem('interventions') || '[]')
+);
   const [showInterventionModal, setShowInterventionModal] = useState(false);
 const [currentAlert, setCurrentAlert] = useState(null);
 const [interventionData, setInterventionData] = useState({
   message: '',
   action: 'contact',
   priority: 'normal',
-  agent: ''
+  agent: '',
+  agentPhone: '',
+  agentSpecialty: ''
 });
 const [interventionHistory, setInterventionHistory] = useState([]);
   const searchFromHeader = useSelector((state) => state.devices.filter.search);
@@ -83,12 +155,28 @@ const [interventionHistory, setInterventionHistory] = useState([]);
 // ════════════════════════════════════════
 const openIntervention = (alert) => {
   setCurrentAlert(alert);
+
+  // Coordonnées GPS
+  let gpsInfo = '';
+  if (alert.position?.lat) {
+    gpsInfo = `\n📍 Position: ${alert.position.lat.toFixed(5)}, ${alert.position.lng.toFixed(5)}`;
+    if (alert.position.address) {
+      gpsInfo += `\n📌 Adresse: ${alert.position.address}`;
+    }
+  }
+
+  // ✅ Agent automatique selon type d'alerte
+  const autoAgent = getAgentForAlert(alert.type, alert.severity);
+
   setInterventionData({
-    message: `Intervention pour: ${alert.message}`,
+    message: `Intervention pour: ${alert.message}${gpsInfo}`,
     action: 'contact',
     priority: alert.severity === 'danger' ? 'urgent' : 'normal',
-    agent: ''
+    agent: autoAgent.name,
+    agentPhone: autoAgent.phone,
+    agentSpecialty: autoAgent.specialty
   });
+
   setShowInterventionModal(true);
 };
 
@@ -96,45 +184,62 @@ const handleInterventionSubmit = (e) => {
   e.preventDefault();
 
   if (!interventionData.message.trim() || !interventionData.agent.trim()) {
-    alert('⚠ Veuillez remplir tous les champs');
+    window.alert('⚠ Veuillez remplir tous les champs');
     return;
   }
 
-  // Créer l'intervention
   const intervention = {
-    id: Date.now(),
-    alertId: currentAlert.id,
-    deviceName: currentAlert.deviceName,
-    alertType: currentAlert.type,
-    alertMessage: currentAlert.message,
-    severity: currentAlert.severity,
-    ...interventionData,
-    timestamp: new Date().toISOString(),
-    status: 'sent'
-  };
+  id: Date.now(),
+  alertId: currentAlert.id,
+  deviceName: currentAlert.deviceName,
+  deviceId: currentAlert.deviceId,
+  alertType: currentAlert.type,
+  alertMessage: currentAlert.message,
+  severity: currentAlert.severity,
+  position: currentAlert.position,
+  // ✅ Infos complètes agent
+  agentName: interventionData.agent,
+  agentPhone: interventionData.agentPhone,
+  agentSpecialty: interventionData.agentSpecialty,
+  message: interventionData.message,
+  action: interventionData.action,
+  priority: interventionData.priority,
+  timestamp: new Date().toISOString(),
+  status: 'sent'
+};  
 
-  // Sauvegarder dans localStorage
   const existing = JSON.parse(localStorage.getItem('interventions') || '[]');
   existing.unshift(intervention);
   localStorage.setItem('interventions', JSON.stringify(existing));
 
-  setInterventionHistory(existing);
-
-  // Marquer l'alerte comme lue
+  setInterventions(existing);
   markOneAsRead(currentAlert.id);
 
-  // Notification de succès
-  window.alert(`✓ Intervention envoyée\n\nAgent: ${interventionData.agent}\nAction: ${interventionData.action.toUpperCase()}\nDevice: ${currentAlert.deviceName}`);
+  window.alert(
+  `✓ INTERVENTION ENVOYÉE\n\n` +
+  `👤 Agent: ${interventionData.agent}\n` +
+  `🎯 Spécialité: ${interventionData.agentSpecialty?.toUpperCase()}\n` +
+  `📞 Téléphone: ${interventionData.agentPhone}\n` +
+  `⚡ Action: ${interventionData.action.toUpperCase()}\n` +
+  `🚨 Priorité: ${interventionData.priority.toUpperCase()}\n` +
+  `📱 Device: ${currentAlert.deviceName}`
+);
 
-  // Fermer modal
   setShowInterventionModal(false);
   setCurrentAlert(null);
   setInterventionData({
-    message: '',
-    action: 'contact',
-    priority: 'normal',
-    agent: ''
-  });
+  message: '',
+  action: 'contact',
+  priority: 'normal',
+  agent: '',
+  agentPhone: '',
+  agentSpecialty: ''
+});
+
+  // ✅ Force re-render
+  setTimeout(() => {
+    setInterventions(JSON.parse(localStorage.getItem('interventions') || '[]'));
+  }, 100);
 };
 
 const handleInterventionChange = (field, value) => {
@@ -160,6 +265,11 @@ const applyTemplate = (type) => {
       message: quickTemplates[type]
     });
   }
+};
+
+// Vérifier si une alerte a déjà eu une intervention
+const isAlertHandled = (alertId) => {
+  return interventions.some(i => i.alertId === alertId);
 };
 
   return (
@@ -279,17 +389,24 @@ const applyTemplate = (type) => {
                 {/* Content */}
                 <div style={styles.alertContent}>
                   <div style={styles.alertHeader}>
-                    <span style={{
-                      ...styles.alertType,
-                      color: color
-                    }}>
-                      {typeInfo.label}
-                    </span>
-                    {!alert.read && (
-                      <span style={styles.unreadDot}>● NOUVEAU</span>
-                    )}
-                  </div>
+  <span style={{
+    ...styles.alertType,
+    color: color
+  }}>
+    {typeInfo.label}
+  </span>
 
+  {/* ✅ Badge selon état */}
+  {isAlertHandled(alert.id) ? (
+    <span style={styles.handledBadge}>
+      ✓ INTERVENTION OK
+    </span>
+  ) : !alert.read ? (
+    <span style={styles.unreadDot}>● NOUVEAU</span>
+  ) : (
+    <span style={styles.readBadge}>○ LUE</span>
+  )}
+</div>
                   <div style={styles.alertMessage}>
                     {alert.message}
                   </div>
@@ -301,6 +418,22 @@ const applyTemplate = (type) => {
                 {/* Delete button */}
                {/* Actions */}
 <div style={styles.alertActions}>
+  
+  {isAlertHandled(alert.id) ? (
+  <button
+    style={{
+      ...styles.interventionBtn,
+      borderColor: 'rgba(0, 255, 65, 0.4)',
+      color: '#00ff41',
+      background: 'rgba(0, 255, 65, 0.05)',
+      cursor: 'not-allowed'
+    }}
+    disabled
+    title="Déjà traitée"
+  >
+    ✓ TRAITÉE
+  </button>
+) : (
   <button
     style={{
       ...styles.interventionBtn,
@@ -315,7 +448,8 @@ const applyTemplate = (type) => {
   >
     ⚡ INTERVENIR
   </button>
-
+)}
+  
   <button
     style={styles.deleteBtn}
     onClick={(e) => {
@@ -460,16 +594,88 @@ const applyTemplate = (type) => {
 
         {/* Agent */}
         <div style={styles.field}>
-          <label style={styles.label}>AGENT RESPONSABLE *</label>
-          <input
-            type="text"
-            required
-            value={interventionData.agent}
-            onChange={(e) => handleInterventionChange('agent', e.target.value)}
-            style={styles.input}
-            placeholder="Nom de l'agent"
-          />
-        </div>
+  <label style={styles.label}>
+    UNITÉ D'INTERVENTION * <span style={{ color: '#00ff41', fontSize: '9px' }}>
+      (auto-assigné)
+    </span>
+  </label>
+
+  <select
+  required
+  value={interventionData.agent}
+  onChange={(e) => {
+    const selected = AGENTS.find(a => a.name === e.target.value);
+    setInterventionData({
+      ...interventionData,
+      agent: e.target.value,
+      agentPhone: selected?.phone || '',
+      agentSpecialty: selected?.specialty || ''
+    });
+  }}
+  style={styles.input}
+>
+  <option value="">-- Sélectionner une unité --</option>
+
+  <optgroup label="🚨 URGENCE">
+    {AGENTS.filter(a => a.specialty === 'urgence').map(a => (
+      <option key={a.name} value={a.name}>{a.name}</option>
+    ))}
+  </optgroup>
+
+  <optgroup label="🎯 TRACKING">
+    {AGENTS.filter(a => a.specialty === 'tracking').map(a => (
+      <option key={a.name} value={a.name}>{a.name}</option>
+    ))}
+  </optgroup>
+
+  <optgroup label="🔧 MAINTENANCE">
+    {AGENTS.filter(a => a.specialty === 'maintenance').map(a => (
+      <option key={a.name} value={a.name}>{a.name}</option>
+    ))}
+  </optgroup>
+
+  <optgroup label="📞 CONTACT">
+    {AGENTS.filter(a => a.specialty === 'contact').map(a => (
+      <option key={a.name} value={a.name}>{a.name}</option>
+    ))}
+  </optgroup>
+</select>
+
+  {/* Info agent sélectionné */}
+  {interventionData.agent && (
+    <div style={{
+      marginTop: '8px',
+      padding: '8px 10px',
+      background: 'rgba(0, 255, 65, 0.05)',
+      border: '1px solid rgba(0, 255, 65, 0.2)',
+      borderRadius: '3px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '4px',
+      fontSize: '10px',
+      fontFamily: 'monospace'
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span style={{ color: '#666' }}>👤 Agent :</span>
+        <span style={{ color: '#00ff41', fontWeight: 700 }}>
+          {interventionData.agent}
+        </span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span style={{ color: '#666' }}>🎯 Spécialité :</span>
+        <span style={{ color: '#00ffff' }}>
+          {interventionData.agentSpecialty?.toUpperCase()}
+        </span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <span style={{ color: '#666' }}>📞 Téléphone :</span>
+        <span style={{ color: '#e0e0e0' }}>
+          {interventionData.agentPhone}
+        </span>
+      </div>
+    </div>
+  )}
+</div>
 
         {/* Action + Priority */}
         <div style={styles.formGrid}>
@@ -772,6 +978,31 @@ const styles = {
     textShadow: '0 0 6px #00ffff',
     animation: 'blink 1.5s infinite'
   },
+
+  handledBadge: {
+  fontSize: '9px',
+  color: '#00ff41',
+  letterSpacing: '1.5px',
+  fontWeight: 700,
+  padding: '3px 10px',
+  background: 'rgba(0, 255, 65, 0.1)',
+  border: '1px solid rgba(0, 255, 65, 0.4)',
+  borderRadius: '3px',
+  textShadow: '0 0 6px #00ff41',
+  fontFamily: 'monospace'
+},
+
+readBadge: {
+  fontSize: '9px',
+  color: '#666',
+  letterSpacing: '1.5px',
+  fontWeight: 600,
+  padding: '3px 10px',
+  background: 'rgba(255, 255, 255, 0.02)',
+  border: '1px solid #1a1a1a',
+  borderRadius: '3px',
+  fontFamily: 'monospace'
+},
 
   alertMessage: {
     fontSize: '13px',
