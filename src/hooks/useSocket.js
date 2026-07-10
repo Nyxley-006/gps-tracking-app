@@ -437,7 +437,6 @@ const sendAlerts = (alerts, device, dispatch) => {
 const useSocket = () => {
   const dispatch       = useDispatch();
   const devicesList    = useSelector((state) => state.devices.list);
-  const geofencesList  = useSelector((state) => state.geofences.list);
   const intervalRef = useRef(null);
   const devicesRef  = useRef(devicesList);
 
@@ -741,19 +740,6 @@ const useSocket = () => {
       // GÉNÉRER ALERTES avec position à jour
       const alerts = generateSmartAlerts(updatedDevice, state);
       sendAlerts(alerts, updatedDevice, dispatch);
-
-
-            // ════════════════════════════════════
-      //  DÉTECTION GEOFENCE AUTO
-      // ════════════════════════════════════
-      detectZoneChanges(
-        device.status === 'online' ? {
-          ...device,
-          position: { lat: safeLat || device.position.lat, lng: safeLng || device.position.lng, address }
-        } : device,
-        geofencesList,
-        dispatch
-      );
 
     });
   }, [dispatch]);

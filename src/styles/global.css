@@ -431,3 +431,27 @@ h6 {
       grid-template-columns: 1fr;
    }
 }
+
+/* Fix autofill jaune du navigateur */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #0a1a0f inset !important;
+  -webkit-text-fill-color: #00ff41 !important;
+  caret-color: #00ff41 !important;
+  transition: background-color 5000s ease-in-out 0s;
+  font-family: monospace !important;
+}
+
+input:-moz-autofill {
+  background-color: #0a1a0f !important;
+  color: #00ff41 !important;
+}
+
+/* Pour Firefox */
+input:autofill {
+  background: #0a1a0f !important;
+  color: #00ff41 !important;
+  -webkit-text-fill-color: #00ff41 !important;
+}

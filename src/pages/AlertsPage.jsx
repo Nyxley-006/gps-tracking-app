@@ -287,9 +287,7 @@ const isAlertHandled = (alertId) => {
         </div>
 
         <div style={styles.headerActions}>
-          <button style={styles.actionBtn} onClick={refresh}>
-            ↻ REFRESH
-          </button>
+      
           {stats.unread > 0 && (
             <button
               style={{...styles.actionBtn, borderColor: '#00ffff', color: '#00ffff'}}

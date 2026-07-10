@@ -2,7 +2,7 @@
   "devices": [
     {
       "id": "1",
-      "name": "Camion 01",
+      "name": "Camion Star - 01",
       "imei": "123456789012345",
       "type": "truck",
       "status": "online",
@@ -24,7 +24,7 @@
     },
     {
       "id": "2",
-      "name": "Fourgon 02",
+      "name": "Fourgon  BOA - 02",
       "imei": "123456789012346",
       "type": "van",
       "status": "online",
@@ -209,76 +209,6 @@
       ]
     }
   ],
-  "geofences": [
-    {
-      "id": "1",
-      "name": "Zone Antananarivo",
-      "type": "circle",
-      "color": "#00ff41",
-      "center": {
-        "lat": -18.8792,
-        "lng": 47.5079
-      },
-      "radius": 100,
-      "active": true,
-      "createdAt": "2024-01-01T00:00:00Z",
-      "description": "",
-      "alertOnEntry": true,
-      "alertOnExit": true,
-      "assignedDevices": [
-        "1"
-      ]
-    },
-    {
-      "id": "2",
-      "name": "Zone Ivato Aéroport",
-      "type": "circle",
-      "color": "#00ffff",
-      "center": {
-        "lat": -18.7969,
-        "lng": 47.4788
-      },
-      "radius": 1500,
-      "active": true,
-      "createdAt": "2024-01-01T00:00:00Z"
-    },
-    {
-      "id": "3",
-      "name": "Zone Industrielle",
-      "type": "circle",
-      "color": "#ff6600",
-      "center": {
-        "lat": -18.93,
-        "lng": 47.51
-      },
-      "radius": 1000,
-      "active": true,
-      "createdAt": "2024-01-05T00:00:00Z",
-      "description": "",
-      "alertOnEntry": true,
-      "alertOnExit": true,
-      "assignedDevices": [
-        "1",
-        "2"
-      ]
-    },
-    {
-      "name": "Fianarantsoa Centre",
-      "type": "circle",
-      "color": "#ff003c",
-      "center": {
-        "lat": -21.4545,
-        "lng": 47.0868
-      },
-      "radius": 10000,
-      "active": true,
-      "createdAt": "2026-06-27T11:24:27.226Z",
-      "id": "pjae0AW1w1g",
-      "description": "",
-      "alertOnEntry": true,
-      "alertOnExit": true
-    }
-  ],
   "alerts": [],
   "users": [
     {
@@ -288,6 +218,15 @@
       "email": "admin@gpstracker.com",
       "role": "admin",
       "avatar": ""
+    },
+    {
+      "username": "n4xl3y",
+      "password": "032506",
+      "email": "n4xl3y@gmail.com",
+      "role": "user",
+      "avatar": "",
+      "createdAt": "2026-07-09T18:34:10.860Z",
+      "id": "aecRZWml5lU"
     }
   ],
   "reports": [],

@@ -251,13 +251,6 @@ const ReportsPage = () => {
           >
             ⬇ DEVICES
           </button>
-          <button
-            style={{...styles.exportBtn, borderColor: 'rgba(0,255,65,0.3)', color: '#888'}}
-            onClick={refreshInterventions}
-            title="Rafraîchir"
-          >
-            ↻
-          </button>
         </div>
       </div>
 

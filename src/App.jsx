@@ -3,30 +3,21 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import useSocket from './hooks/useSocket';
 
-// Pages
 import LoginPage     from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import TrackingPage  from './pages/TrackingPage';
 import DevicesPage   from './pages/DevicesPage';
 import AlertsPage    from './pages/AlertsPage';
-import GeofencePage  from './pages/GeofencePage';
 import ReportsPage   from './pages/ReportsPage';
 
-// Layout
 import Sidebar from './components/Sidebar/Sidebar';
 import Header  from './components/Header/Header';
 
-// ════════════════════════════════════════
-//  PROTECTED ROUTE
-// ════════════════════════════════════════
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
-// ════════════════════════════════════════
-//  MAIN LAYOUT
-// ════════════════════════════════════════
 const MainLayout = ({ children }) => {
   return (
     <div className="app-wrapper">
@@ -41,9 +32,6 @@ const MainLayout = ({ children }) => {
   );
 };
 
-// ════════════════════════════════════════
-//  APP
-// ════════════════════════════════════════
 function App() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   useSocket();
@@ -52,7 +40,6 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* LOGIN */}
         <Route
           path="/login"
           element={
@@ -62,7 +49,6 @@ function App() {
           }
         />
 
-        {/* PROTECTED ROUTES */}
         <Route path="/" element={
           <ProtectedRoute>
             <MainLayout>
@@ -95,14 +81,6 @@ function App() {
           </ProtectedRoute>
         }/>
 
-        <Route path="/geofence" element={
-          <ProtectedRoute>
-            <MainLayout>
-              <GeofencePage />
-            </MainLayout>
-          </ProtectedRoute>
-        }/>
-
         <Route path="/reports" element={
           <ProtectedRoute>
             <MainLayout>
@@ -111,7 +89,6 @@ function App() {
           </ProtectedRoute>
         }/>
 
-        {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
